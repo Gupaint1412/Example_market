@@ -65,7 +65,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        // return $product;
+        return view('products.edit')->with('product',$product);   //  'ตัวแปรเรียกใช้ที่ view' , $ค่าที่รับมา
     }
 
     /**
@@ -77,7 +78,15 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $prepareProduct = [
+            'name' => $request->name,
+            'price' => $request->price,
+            'user_id' => Auth::id()
+        ];
+        $productInst = Product::find($product->id);
+        // dd($productInst);
+        $productInst->update($prepareProduct);
+        return redirect()->route('products.index');
     }
 
     /**
@@ -88,6 +97,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        // return 'delete'.$product->id;
+        $productInst = Product::find($product->id);
+        $productInst->delete();
+        return redirect()->route('products.index');
     }
 }

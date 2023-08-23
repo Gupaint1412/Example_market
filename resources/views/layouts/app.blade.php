@@ -49,6 +49,15 @@
                                 </li>
                             @endif
                         @else
+                        <li class="nav-item" style="display:flex;align-items:center;text-align:center;margin-right:1rem">
+                            <a href="{{route('home')}}" class="nav-link" style="text-decoration:none;">Home</a>
+                        </li>
+                        <li class="nav-item" style="display:flex;align-items:center;text-align:center;margin-right:1rem">
+                            <a href="{{route('products.index')}}" class="nav-link" style="text-decoration:none;">Product</a>
+                        </li>
+                        <li class="nav-item" style="display:flex;align-items:center;text-align:center;margin-right:1rem">
+                            <a href="{{route('orders.index')}}" class="nav-link" style="text-decoration:none;">Orders</a>
+                        </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
