@@ -43,15 +43,15 @@ class OrderController extends Controller
     {
         // return 'store order';
         $product = Product::find($request->product_id);
-        $order = Order::where('user_id',Auth::id())->where('status',0)->first();   //first เอาตัวแรกตัวเดียวที่เป็น 0
-        if($order){
+        $order = Order::where('user_id',Auth::id())->where('status',0)->first();   //first เอาตัวแรกตัวเดียวที่เป็น 0   // 1.1 เช็คว่ามีสินค้าในตระกร้าที่มีสถานะเป็น 1 หรือไม่ 
+        if($order){  //ถ้ามี1.1 ให้เช็คว่ามีสินค้าชนิดเดียวกันในตระกร้าหรือไม่
             $orderDetail = $order->order_details()->where('product_id',$product->id)->first(); 
-            if($orderDetail){
+            if($orderDetail){ //ถ้ามีสินค้าชนิดเดียวกันในตะกร้า ให้เพิ่ม จำนวนใน oederdetail
                 $amountNew = $orderDetail->amount +1;
                 $orderDetail->update([
                     'amount' => $amountNew
                 ]);
-            }else{
+            }else{ //ถ้าไม่มีสินค้าชนิดเดียวกันให้เพิ่มสินค้าใหม่เข้าไปในตระกร้า
                 $prepareCartDetail = [
                     'order_id' => $order->id,
                     'product_id' => $product->id,
@@ -61,7 +61,8 @@ class OrderController extends Controller
                 ];
                 $orderDetail = OrderDetail::create($prepareCartDetail);
             }
-        }else{
+        }else//ถ้าไม่มี 1.1 ให้สร้างตระกร้าที่มี สถานะเป็น 0 และเพิ่มสินค้าในตระกร้า
+        {
             $prepareCart = [
                 'status' => 0,
                 'user_id' => Auth::id(),
