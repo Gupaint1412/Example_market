@@ -20,6 +20,11 @@
                             <td>{{ $item->amount }}</td>   
                         </tr>
                         @endforeach
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     </tbody>
                 </table>
                 

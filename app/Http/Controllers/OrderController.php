@@ -80,7 +80,7 @@ class OrderController extends Controller
             ];
             $orderDetail = OrderDetail::create($prepareCartDetail);
         }
-        
+     
         return redirect()->route('products.index');
     }
 
