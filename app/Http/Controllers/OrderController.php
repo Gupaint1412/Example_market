@@ -80,7 +80,16 @@ class OrderController extends Controller
             ];
             $orderDetail = OrderDetail::create($prepareCartDetail);
         }
-     
+        $totalRaw = 0;
+        $total = $order->order_details->map(function($orderDetail) use ($totalRaw) {
+            //totalRaw = totalRaw + orderDetail->amount * orderDetail->price
+           $totalRaw +=  $orderDetail->amount * $orderDetail->price;
+           return $totalRaw;
+        })->toarray();
+        // dd(array_sum($total));
+        $order->update([
+            'total'=> array_sum($total)
+        ]);
         return redirect()->route('products.index');
     }
 
@@ -113,9 +122,41 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    // public function update(Request $request, $id ,Order $order)
+    public function update(Request $request,Order $order)
     {
-        //
+        // return $request;
+        $orderDetail = $order->order_details()->where('product_id',$request->product_id)->first(); 
+        if($request->value =="checkout"){
+            $order->update([
+                'status'=> 1
+            ]);
+        }else{
+            if($orderDetail){ //ถ้ามีสินค้าชนิดเดียวกันในตะกร้า ให้เพิ่ม จำนวนใน oederdetail
+                if($request->value=="increase"){
+                    $amountNew = $orderDetail->amount +1;
+                }else{
+                    $amountNew = $orderDetail->amount -1;
+                }
+                
+                $orderDetail->update([
+                    'amount' => $amountNew
+                ]);
+            }
+        }
+        
+        $totalRaw = 0;
+        $total = $order->order_details->map(function($orderDetail) use ($totalRaw) {
+            //totalRaw = totalRaw + orderDetail->amount * orderDetail->price
+           $totalRaw +=  $orderDetail->amount * $orderDetail->price;
+           return $totalRaw;
+        })->toarray();
+        // dd(array_sum($total));
+        $order->update([
+            'total'=> array_sum($total)
+        ]);
+
+        return redirect()->route('orders.index');
     }
 
     /**

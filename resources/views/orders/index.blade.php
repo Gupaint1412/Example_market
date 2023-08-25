@@ -6,28 +6,54 @@
             <div class="col-md-12">
                 <table class="table table-striped table-bordered">
                     <thead>
-                        <tr>
+                        <tr style="text-align: center">
                             <th>Name Product</th>
                             <th>Price</th>
                             <th>Amount</th>
+                            <th>Manage</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($orderView->order_details as $item)
-                        <tr>
-                            <td>{{ $item->product_name }}</td>   
-                            <td>{{ $item->price }}</td>   
-                            <td>{{ $item->amount }}</td>   
-                        </tr>
-                        @endforeach
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                        @if($orderView)
+                            @foreach ($orderView->order_details as $item)
+                            <tr style="text-align: center">
+                                <td>{{ $item->product_name }}</td>   
+                                <td>{{ $item->price }}</td>   
+                                <td>{{ $item->amount }}</td>
+                                <td style="display:flex;justify-content:space-around">
+                                    <form action="{{route('orders.update',$orderView->id)}}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="hidden" name="product_id" value="{{ $item->product_id }}">
+                                        <input type="hidden" value="decrease" name="value">
+                                        <button class="btn btn-outline-danger" type="submit">-</button>
+                                    </form>
+                                    <form action="{{route('orders.update',$orderView->id)}}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="hidden" name="product_id" value="{{ $item->product_id }}">
+                                        <input type="hidden" value="increase" name="value">
+                                        <button class="btn btn-outline-success">+</button>
+                                    </form>
+                                </td>   
+                            </tr>
+                            @endforeach
+                            <tr style="text-align: center">
+                                <td></td>
+                                <td><b> {{ $orderView->total }}</b></td>
+                                <td></td>
+                                <td>
+                                    <form action="{{route('orders.update',$orderView->id)}}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="hidden" value="checkout" name="value">
+                                        <button class="btn btn-outline-primary">Checkout</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endif                        
                     </tbody>
-                </table>
-                
+                </table>                
             </div>
         </div>
     </div>
